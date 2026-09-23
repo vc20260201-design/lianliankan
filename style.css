@@ -10,6 +10,7 @@
   --cream: #fff6e8;
   --muted: rgba(255, 246, 232, 0.62);
   --tile: #fffdf7;
+  --tile-size: 52px;
   --shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
   --radius: 18px;
   --font: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
@@ -342,24 +343,41 @@ button {
 }
 
 .cell {
-  width: var(--tile, 52px);
-  height: var(--tile, 52px);
+  width: var(--tile-size);
+  height: var(--tile-size);
 }
 
 .tile {
   width: 100%;
   height: 100%;
-  border-radius: clamp(6px, calc(var(--tile, 52px) * 0.18), 12px);
+  box-sizing: border-box;
+  border-radius: clamp(6px, calc(var(--tile-size) * 0.18), 12px);
   background: var(--tile);
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.8) inset,
     0 8px 16px rgba(0, 0, 0, 0.18);
   display: grid;
   place-items: center;
-  font-size: calc(var(--tile, 52px) * 0.58);
+  padding: 0;
+  overflow: hidden;
+  container-type: size;
+  font-family: "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif;
   line-height: 1;
   user-select: none;
   transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.tile-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-size: calc(var(--tile-size) - 2px);
+  font-size: 100cqmin;
+  line-height: 1;
+  transform: translateX(-0.14em);
+  pointer-events: none;
 }
 
 .tile:hover {

@@ -284,7 +284,7 @@
         Math.floor((rect.height - pad * 2 - gap * (logicalRows - 1)) / logicalRows)
       )
     );
-    boardEl.style.setProperty("--tile", `${tile}px`);
+    boardEl.style.setProperty("--tile-size", `${tile}px`);
     boardEl.style.setProperty("--gap", `${gap}px`);
     boardEl.style.gridTemplateColumns = `repeat(${logicalCols}, ${tile}px)`;
   }
@@ -305,7 +305,10 @@
           btn.type = "button";
           btn.className = "tile";
           btn.style.background = TILES[type - 1].bg;
-          btn.textContent = TILES[type - 1].icon;
+          const icon = document.createElement("span");
+          icon.className = "tile-icon";
+          icon.textContent = TILES[type - 1].icon;
+          btn.appendChild(icon);
           btn.setAttribute("aria-label", `图案 ${type}`);
           btn.addEventListener("click", () => onTileClick(r, c));
           wrap.appendChild(btn);
