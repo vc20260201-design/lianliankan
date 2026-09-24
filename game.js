@@ -1,61 +1,61 @@
 (() => {
-  const TILE_FACE = [
-    { bg: "#fff8f6", accent: "#c81d25" },
-    { bg: "#fff8f1", accent: "#e3640a" },
-    { bg: "#fffdf3", accent: "#b8860b" },
-    { bg: "#f8f4ff", accent: "#6f2dbd" },
-    { bg: "#fff6f8", accent: "#d6336c" },
-    { bg: "#f4fff7", accent: "#1b8a4a" },
-    { bg: "#fff7f2", accent: "#e8590c" },
-    { bg: "#fff5f5", accent: "#a51111" },
-    { bg: "#f7fbe9", accent: "#5c8f12" },
-    { bg: "#fffceb", accent: "#c4920a" },
-    { bg: "#fff8e8", accent: "#c47f08" },
-    { bg: "#fbf7f2", accent: "#7a5230" },
-    { bg: "#fff6ee", accent: "#d9480f" },
-    { bg: "#fffbea", accent: "#d4a017" },
-    { bg: "#fff6f4", accent: "#e03131" },
-    { bg: "#f4fbf3", accent: "#2b8a3e" },
-    { bg: "#fff5fb", accent: "#ae3ec9" },
-    { bg: "#f3fbf5", accent: "#087f5b" },
-    { bg: "#fff9e8", accent: "#e67700" },
-    { bg: "#f5f7ff", accent: "#364fc7" },
+  const CALM_FACE = [
+    { bg: "#f6f3ee", accent: "#b36b4a" },
+    { bg: "#f3f6f4", accent: "#4f8f72" },
+    { bg: "#f4f5f8", accent: "#5c6f99" },
+    { bg: "#f6f4f2", accent: "#8a7356" },
+    { bg: "#f5f3f6", accent: "#7d6a94" },
+    { bg: "#f3f6f5", accent: "#3f7d78" },
+    { bg: "#f7f4f1", accent: "#a36b4f" },
+    { bg: "#f4f5f3", accent: "#6b7a4e" },
+    { bg: "#f5f4f6", accent: "#6e6490" },
+    { bg: "#f6f5f2", accent: "#9a8450" },
+    { bg: "#f3f5f6", accent: "#4e7594" },
+    { bg: "#f6f3f3", accent: "#a15d5d" },
+    { bg: "#f4f6f3", accent: "#5d8a62" },
+    { bg: "#f5f4f3", accent: "#7a6a58" },
+    { bg: "#f3f5f7", accent: "#4f6e8a" },
+    { bg: "#f6f4f5", accent: "#8d6478" },
+    { bg: "#f4f6f6", accent: "#4e7c78" },
+    { bg: "#f6f5f3", accent: "#8a7848" },
+    { bg: "#f3f4f6", accent: "#5a6790" },
+    { bg: "#f5f6f4", accent: "#5f7a58" },
   ];
 
-  function faceTiles(icons) {
-    return icons.map((icon, i) => ({ icon, bg: TILE_FACE[i].bg, accent: TILE_FACE[i].accent }));
+  function calmTiles(icons) {
+    return icons.map((icon, i) => ({ icon, bg: CALM_FACE[i].bg, accent: CALM_FACE[i].accent }));
   }
 
   const TILE_SETS = [
     {
       id: "fruit",
       name: "水果",
-      tiles: faceTiles(["🍎", "🍊", "🍋", "🍇", "🍓", "🍉", "🍑", "🍒", "🥝", "🍌", "🍍", "🥥", "🥕", "🌽", "🍅", "🥑", "🌸", "🍀", "⭐", "🌙"]),
+      tiles: calmTiles(["🍎", "🍊", "🍋", "🍇", "🍓", "🍉", "🍑", "🍒", "🥝", "🍌", "🍍", "🥥", "🥕", "🌽", "🍅", "🥑", "🌸", "🍀", "⭐", "🌙"]),
     },
     {
       id: "dessert",
       name: "甜点",
-      tiles: faceTiles(["🍰", "🍩", "🍪", "🍫", "🍬", "🍭", "🍮", "🍦", "🧁", "🥧", "🍯", "🍿", "🥐", "🧇", "🥞", "🍵", "☕", "🧀", "🥨", "🍞"]),
+      tiles: calmTiles(["🍰", "🍩", "🍪", "🍫", "🍬", "🍭", "🍮", "🍦", "🧁", "🥧", "🍯", "🍿", "🥐", "🧇", "🥞", "🍵", "☕", "🧀", "🥨", "🍞"]),
     },
     {
       id: "toy",
       name: "玩具",
-      tiles: faceTiles(["🧸", "🎈", "🎮", "🎲", "🎯", "🪁", "🧩", "🪀", "🪆", "🎪", "🎨", "🎭", "🚀", "🏀", "🏈", "🎾", "🎳", "🎠", "🎡", "🛼"]),
+      tiles: calmTiles(["🧸", "🎈", "🎮", "🎲", "🎯", "🪁", "🧩", "🪀", "🪆", "🎪", "🎨", "🎭", "🚀", "🏀", "🏈", "🎾", "🎳", "🎠", "🎡", "🛼"]),
     },
     {
       id: "vehicle",
       name: "交通",
-      tiles: faceTiles(["🚗", "🚌", "🚜", "🚲", "🛵", "🚂", "✈️", "🚁", "⛵", "🚢", "🚑", "🚒", "🚓", "🚚", "🏍️", "🛴", "🛸", "🛶", "🚡", "🛺"]),
+      tiles: calmTiles(["🚗", "🚌", "🚜", "🚲", "🛵", "🚂", "✈️", "🚁", "⛵", "🚢", "🚑", "🚒", "🚓", "🚚", "🏍️", "🛴", "🛸", "🛶", "🚡", "🛺"]),
     },
     {
       id: "animal",
       name: "动物",
-      tiles: faceTiles(["🐶", "🐱", "🐭", "🐹", "🐰", "🦊", "🐻", "🐼", "🐨", "🐯", "🦁", "🐮", "🐷", "🐸", "🐵", "🐔", "🐧", "🦄", "🐝", "🐬"]),
+      tiles: calmTiles(["🐶", "🐱", "🐭", "🐹", "🐰", "🦊", "🐻", "🐼", "🐨", "🐯", "🦁", "🐮", "🐷", "🐸", "🐵", "🐔", "🐧", "🦄", "🐝", "🐬"]),
     },
     {
       id: "emoji",
       name: "表情",
-      tiles: faceTiles(["😀", "😎", "🤩", "😍", "😜", "😭", "😡", "😱", "😴", "🤗", "👍", "❤️", "🔥", "💎", "⚽", "🚗", "✈️", "🎁", "🎵", "☀️"]),
+      tiles: calmTiles(["😀", "😎", "😴", "🥶", "👻", "🤖", "💙", "💚", "💜", "❄️", "🌙", "☁️", "🌈", "🍀", "🌸", "⭐", "🎵", "💎", "⚽", "🌊"]),
     },
   ];
 
