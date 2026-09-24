@@ -1,25 +1,25 @@
 (() => {
   const TILES = [
-    { icon: "🍎", bg: "#ffe2dd" },
-    { icon: "🍊", bg: "#ffe4c7" },
-    { icon: "🍋", bg: "#fff4b8" },
-    { icon: "🍇", bg: "#f0e1ff" },
-    { icon: "🍓", bg: "#ffd4de" },
-    { icon: "🍉", bg: "#d9ffe4" },
-    { icon: "🍑", bg: "#ffe0d2" },
-    { icon: "🍒", bg: "#ffd6d6" },
-    { icon: "🥝", bg: "#e5f7c8" },
-    { icon: "🍌", bg: "#fff2b0" },
-    { icon: "🍍", bg: "#fff0c9" },
-    { icon: "🥥", bg: "#f3e6d8" },
-    { icon: "🥕", bg: "#ffe0c2" },
-    { icon: "🌽", bg: "#fff5c5" },
-    { icon: "🍅", bg: "#ffd5d0" },
-    { icon: "🥑", bg: "#e3f5d4" },
-    { icon: "🌸", bg: "#ffe4ef" },
-    { icon: "🍀", bg: "#d8f5de" },
-    { icon: "⭐", bg: "#fff3c4" },
-    { icon: "🌙", bg: "#e4ecff" },
+    { icon: "🍎", bg: "#fff8f6", accent: "#c81d25" },
+    { icon: "🍊", bg: "#fff8f1", accent: "#e3640a" },
+    { icon: "🍋", bg: "#fffdf3", accent: "#b8860b" },
+    { icon: "🍇", bg: "#f8f4ff", accent: "#6f2dbd" },
+    { icon: "🍓", bg: "#fff6f8", accent: "#d6336c" },
+    { icon: "🍉", bg: "#f4fff7", accent: "#1b8a4a" },
+    { icon: "🍑", bg: "#fff7f2", accent: "#e8590c" },
+    { icon: "🍒", bg: "#fff5f5", accent: "#a51111" },
+    { icon: "🥝", bg: "#f7fbe9", accent: "#5c8f12" },
+    { icon: "🍌", bg: "#fffceb", accent: "#c4920a" },
+    { icon: "🍍", bg: "#fff8e8", accent: "#c47f08" },
+    { icon: "🥥", bg: "#fbf7f2", accent: "#7a5230" },
+    { icon: "🥕", bg: "#fff6ee", accent: "#d9480f" },
+    { icon: "🌽", bg: "#fffbea", accent: "#d4a017" },
+    { icon: "🍅", bg: "#fff6f4", accent: "#e03131" },
+    { icon: "🥑", bg: "#f4fbf3", accent: "#2b8a3e" },
+    { icon: "🌸", bg: "#fff5fb", accent: "#ae3ec9" },
+    { icon: "🍀", bg: "#f3fbf5", accent: "#087f5b" },
+    { icon: "⭐", bg: "#fff9e8", accent: "#e67700" },
+    { icon: "🌙", bg: "#f5f7ff", accent: "#364fc7" },
   ];
 
   const LAYOUTS = {
@@ -414,21 +414,24 @@
     const logicalRows = rows + 2;
     const logicalCols = cols + 2;
     const rect = boardStage.getBoundingClientRect();
-    const pad = 20;
-    const minTile = logicalCols >= 18 ? 18 : 26;
-    const maxTile = logicalCols >= 18 ? 46 : 64;
-    const gap = logicalCols >= 18 ? 3 : logicalCols >= 14 ? 4 : 6;
-    const tile = Math.max(
+    const pad = 4;
+    const minTile = logicalCols >= 18 ? 20 : 28;
+    const maxTile = logicalCols >= 18 ? 160 : 320;
+    const gap = logicalCols >= 18 ? 2 : 3;
+    const tileW = Math.max(
       minTile,
-      Math.min(
-        maxTile,
-        Math.floor((rect.width - pad * 2 - gap * (logicalCols - 1)) / logicalCols),
-        Math.floor((rect.height - pad * 2 - gap * (logicalRows - 1)) / logicalRows)
-      )
+      Math.min(maxTile, Math.floor((rect.width - pad * 2 - gap * (logicalCols - 1)) / logicalCols))
     );
-    boardEl.style.setProperty("--tile-size", `${tile}px`);
+    const tileH = Math.max(
+      minTile,
+      Math.min(maxTile, Math.floor((rect.height - pad * 2 - gap * (logicalRows - 1)) / logicalRows))
+    );
+    boardEl.style.setProperty("--tile-w", `${tileW}px`);
+    boardEl.style.setProperty("--tile-h", `${tileH}px`);
+    boardEl.style.setProperty("--tile-size", `${Math.min(tileW, tileH)}px`);
     boardEl.style.setProperty("--gap", `${gap}px`);
-    boardEl.style.gridTemplateColumns = `repeat(${logicalCols}, ${tile}px)`;
+    boardEl.style.gridTemplateColumns = `repeat(${logicalCols}, ${tileW}px)`;
+    boardEl.style.gridTemplateRows = `repeat(${logicalRows}, ${tileH}px)`;
   }
 
   function renderBoard() {
@@ -447,6 +450,7 @@
           btn.type = "button";
           btn.className = "tile";
           btn.style.background = TILES[type - 1].bg;
+          btn.style.borderColor = TILES[type - 1].accent;
           const icon = document.createElement("span");
           icon.className = "tile-icon";
           icon.textContent = TILES[type - 1].icon;
