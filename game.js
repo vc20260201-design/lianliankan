@@ -1,25 +1,62 @@
 (() => {
-  const TILES = [
-    { icon: "🍎", bg: "#fff8f6", accent: "#c81d25" },
-    { icon: "🍊", bg: "#fff8f1", accent: "#e3640a" },
-    { icon: "🍋", bg: "#fffdf3", accent: "#b8860b" },
-    { icon: "🍇", bg: "#f8f4ff", accent: "#6f2dbd" },
-    { icon: "🍓", bg: "#fff6f8", accent: "#d6336c" },
-    { icon: "🍉", bg: "#f4fff7", accent: "#1b8a4a" },
-    { icon: "🍑", bg: "#fff7f2", accent: "#e8590c" },
-    { icon: "🍒", bg: "#fff5f5", accent: "#a51111" },
-    { icon: "🥝", bg: "#f7fbe9", accent: "#5c8f12" },
-    { icon: "🍌", bg: "#fffceb", accent: "#c4920a" },
-    { icon: "🍍", bg: "#fff8e8", accent: "#c47f08" },
-    { icon: "🥥", bg: "#fbf7f2", accent: "#7a5230" },
-    { icon: "🥕", bg: "#fff6ee", accent: "#d9480f" },
-    { icon: "🌽", bg: "#fffbea", accent: "#d4a017" },
-    { icon: "🍅", bg: "#fff6f4", accent: "#e03131" },
-    { icon: "🥑", bg: "#f4fbf3", accent: "#2b8a3e" },
-    { icon: "🌸", bg: "#fff5fb", accent: "#ae3ec9" },
-    { icon: "🍀", bg: "#f3fbf5", accent: "#087f5b" },
-    { icon: "⭐", bg: "#fff9e8", accent: "#e67700" },
-    { icon: "🌙", bg: "#f5f7ff", accent: "#364fc7" },
+  const TILE_FACE = [
+    { bg: "#fff8f6", accent: "#c81d25" },
+    { bg: "#fff8f1", accent: "#e3640a" },
+    { bg: "#fffdf3", accent: "#b8860b" },
+    { bg: "#f8f4ff", accent: "#6f2dbd" },
+    { bg: "#fff6f8", accent: "#d6336c" },
+    { bg: "#f4fff7", accent: "#1b8a4a" },
+    { bg: "#fff7f2", accent: "#e8590c" },
+    { bg: "#fff5f5", accent: "#a51111" },
+    { bg: "#f7fbe9", accent: "#5c8f12" },
+    { bg: "#fffceb", accent: "#c4920a" },
+    { bg: "#fff8e8", accent: "#c47f08" },
+    { bg: "#fbf7f2", accent: "#7a5230" },
+    { bg: "#fff6ee", accent: "#d9480f" },
+    { bg: "#fffbea", accent: "#d4a017" },
+    { bg: "#fff6f4", accent: "#e03131" },
+    { bg: "#f4fbf3", accent: "#2b8a3e" },
+    { bg: "#fff5fb", accent: "#ae3ec9" },
+    { bg: "#f3fbf5", accent: "#087f5b" },
+    { bg: "#fff9e8", accent: "#e67700" },
+    { bg: "#f5f7ff", accent: "#364fc7" },
+  ];
+
+  function faceTiles(icons) {
+    return icons.map((icon, i) => ({ icon, bg: TILE_FACE[i].bg, accent: TILE_FACE[i].accent }));
+  }
+
+  const TILE_SETS = [
+    {
+      id: "fruit",
+      name: "水果",
+      tiles: faceTiles(["🍎", "🍊", "🍋", "🍇", "🍓", "🍉", "🍑", "🍒", "🥝", "🍌", "🍍", "🥥", "🥕", "🌽", "🍅", "🥑", "🌸", "🍀", "⭐", "🌙"]),
+    },
+    {
+      id: "dessert",
+      name: "甜点",
+      tiles: faceTiles(["🍰", "🍩", "🍪", "🍫", "🍬", "🍭", "🍮", "🍦", "🧁", "🥧", "🍯", "🍿", "🥐", "🧇", "🥞", "🍵", "☕", "🧀", "🥨", "🍞"]),
+    },
+    {
+      id: "toy",
+      name: "玩具",
+      tiles: faceTiles(["🧸", "🎈", "🎮", "🎲", "🎯", "🪁", "🧩", "🪀", "🪆", "🎪", "🎨", "🎭", "🚀", "🏀", "🏈", "🎾", "🎳", "🎠", "🎡", "🛼"]),
+    },
+    {
+      id: "vehicle",
+      name: "交通",
+      tiles: faceTiles(["🚗", "🚌", "🚜", "🚲", "🛵", "🚂", "✈️", "🚁", "⛵", "🚢", "🚑", "🚒", "🚓", "🚚", "🏍️", "🛴", "🛸", "🛶", "🚡", "🛺"]),
+    },
+    {
+      id: "animal",
+      name: "动物",
+      tiles: faceTiles(["🐶", "🐱", "🐭", "🐹", "🐰", "🦊", "🐻", "🐼", "🐨", "🐯", "🦁", "🐮", "🐷", "🐸", "🐵", "🐔", "🐧", "🦄", "🐝", "🐬"]),
+    },
+    {
+      id: "emoji",
+      name: "表情",
+      tiles: faceTiles(["😀", "😎", "🤩", "😍", "😜", "😭", "😡", "😱", "😴", "🤗", "👍", "❤️", "🔥", "💎", "⚽", "🚗", "✈️", "🎁", "🎵", "☀️"]),
+    },
   ];
 
   const LAYOUTS = {
@@ -67,6 +104,7 @@
   const gravityNameEl = document.getElementById("gravity-name");
   const gravityMarkEl = document.getElementById("gravity-mark");
   const gravityHintEl = document.getElementById("gravity-hint");
+  const setNameEl = document.getElementById("set-name");
   const overlay = document.getElementById("overlay");
   const modalKicker = document.getElementById("modal-kicker");
   const modalTitle = document.getElementById("modal-title");
@@ -96,6 +134,7 @@
     timerId: null,
     audio: null,
     gravity: GRAVITY_MODES[0],
+    tileSet: TILE_SETS[0],
   };
 
   let modalMode = "pause";
@@ -342,10 +381,15 @@
     gravityNameEl.textContent = gravity.name;
     gravityMarkEl.textContent = gravity.mark;
     gravityHintEl.textContent = gravity.hint;
+    setNameEl.textContent = state.tileSet.name;
   }
 
   function pickGravity() {
     return GRAVITY_MODES[Math.floor(Math.random() * GRAVITY_MODES.length)];
+  }
+
+  function pickTileSet() {
+    return TILE_SETS[Math.floor(Math.random() * TILE_SETS.length)];
   }
 
   async function applyGravity() {
@@ -449,11 +493,12 @@
           const btn = document.createElement("button");
           btn.type = "button";
           btn.className = "tile";
-          btn.style.background = TILES[type - 1].bg;
-          btn.style.borderColor = TILES[type - 1].accent;
+          const tile = state.tileSet.tiles[type - 1];
+          btn.style.background = tile.bg;
+          btn.style.borderColor = tile.accent;
           const icon = document.createElement("span");
           icon.className = "tile-icon";
-          icon.textContent = TILES[type - 1].icon;
+          icon.textContent = tile.icon;
           btn.appendChild(icon);
           btn.setAttribute("aria-label", `图案 ${type}`);
           btn.addEventListener("click", () => onTileClick(r, c));
@@ -743,6 +788,7 @@
     state.combo = 0;
     state.lastMatchAt = 0;
     state.gravity = pickGravity();
+    state.tileSet = pickTileSet();
     state.locked = false;
     state.paused = false;
     state.running = true;
