@@ -261,6 +261,54 @@ button {
   gap: 10px;
 }
 
+.topbar {
+  display: grid;
+  gap: 8px;
+  justify-items: center;
+}
+
+.topbar .hud {
+  width: 100%;
+}
+
+.gravity-bar {
+  width: fit-content;
+  max-width: 100%;
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  padding: 6px 16px;
+  border-radius: 999px;
+  background: rgba(240, 193, 75, 0.12);
+  border: 1px solid rgba(240, 193, 75, 0.42);
+}
+
+.gravity-kicker {
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  color: var(--gold);
+}
+
+.gravity-name {
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--gold-soft);
+}
+
+.gravity-mark {
+  font-size: 18px;
+  letter-spacing: 0.12em;
+  color: var(--cream);
+}
+
+.gravity-hint {
+  font-size: 13px;
+  color: var(--muted);
+}
+
 .hud {
   display: grid;
   grid-template-columns: 1fr 1.4fr 1fr;
@@ -404,6 +452,12 @@ button {
   pointer-events: none;
 }
 
+.tile.is-falling {
+  position: relative;
+  z-index: 5;
+  pointer-events: none;
+}
+
 @keyframes hintPulse {
   50% {
     transform: scale(1.08);
@@ -544,6 +598,15 @@ button {
 
   .stat strong {
     font-size: 18px;
+  }
+
+  .gravity-name {
+    font-size: 18px;
+  }
+
+  .gravity-hint {
+    flex-basis: 100%;
+    text-align: center;
   }
 
   .controls .btn {

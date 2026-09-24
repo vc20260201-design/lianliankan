@@ -67,11 +67,18 @@
         </div>
 
         <button class="btn btn-primary" id="start-btn" type="button">开始游戏</button>
-        <p class="hint-text">点击两块相同的图案，路径最多拐两个弯</p>
+        <p class="hint-text">点击两块相同图案，连线最多拐两个弯。每局随机一种重力，方向显示在画面上方</p>
       </section>
 
       <section class="screen screen-game is-hidden" id="game-screen">
-        <header class="hud">
+        <div class="topbar">
+          <div class="gravity-bar" id="gravity-bar" aria-live="polite">
+            <span class="gravity-kicker">本局重力</span>
+            <strong class="gravity-name" id="gravity-name">向下</strong>
+            <span class="gravity-mark" id="gravity-mark" aria-hidden="true">↓</span>
+            <span class="gravity-hint" id="gravity-hint">消除后，悬空方块向下落</span>
+          </div>
+          <header class="hud">
           <div class="stat">
             <span class="stat-label">分数</span>
             <strong id="score">0</strong>
@@ -88,6 +95,7 @@
             <strong id="remain">0</strong>
           </div>
         </header>
+        </div>
 
         <div class="board-stage" id="board-stage">
           <svg class="path-svg" id="path-svg" aria-hidden="true"></svg>

@@ -36,6 +36,16 @@
     score: "积分模式统一 10 分钟，时间耗尽则结束",
   };
 
+  const GRAVITY_MODES = [
+    { id: "down", name: "向下", mark: "↓", hint: "消除后，悬空方块向下落" },
+    { id: "up", name: "向上", mark: "↑", hint: "消除后，悬空方块向上浮" },
+    { id: "left", name: "向左", mark: "←", hint: "消除后，悬空方块向左靠" },
+    { id: "right", name: "向右", mark: "→", hint: "消除后，悬空方块向右靠" },
+    { id: "splitX", name: "向两侧", mark: "←|→", hint: "中心竖轴左侧向左，右侧向右" },
+    { id: "splitY", name: "向上下", mark: "↑|↓", hint: "水平横轴上侧向上，下侧向下" },
+  ];
+  const GRAVITY_MS = 320;
+
   const homeScreen = document.getElementById("home-screen");
   const gameScreen = document.getElementById("game-screen");
   const boardEl = document.getElementById("board");
@@ -53,6 +63,10 @@
   const hintCountEl = document.getElementById("hint-count");
   const shuffleCountEl = document.getElementById("shuffle-count");
   const modeDesc = document.getElementById("mode-desc");
+  const gravityBar = document.getElementById("gravity-bar");
+  const gravityNameEl = document.getElementById("gravity-name");
+  const gravityMarkEl = document.getElementById("gravity-mark");
+  const gravityHintEl = document.getElementById("gravity-hint");
   const overlay = document.getElementById("overlay");
   const modalKicker = document.getElementById("modal-kicker");
   const modalTitle = document.getElementById("modal-title");
@@ -81,6 +95,7 @@
     running: false,
     timerId: null,
     audio: null,
+    gravity: GRAVITY_MODES[0],
   };
 
   let modalMode = "pause";
@@ -253,6 +268,133 @@
     tiles.forEach((tile, i) => {
       state.board[tile.r][tile.c] = values[i];
     });
+  }
+
+  function columnCells(c, r0, r1) {
+    const cells = [];
+    for (let r = r0; r <= r1; r += 1) cells.push({ r, c });
+    return cells;
+  }
+
+  function rowCells(r, c0, c1) {
+    const cells = [];
+    for (let c = c0; c <= c1; c += 1) cells.push({ r, c });
+    return cells;
+  }
+
+  function pack(cells, toward) {
+    const filled = [];
+    for (const pos of cells) {
+      const type = state.board[pos.r][pos.c];
+      if (type) filled.push({ r: pos.r, c: pos.c, type });
+    }
+    const targets =
+      toward === "start" ? cells.slice(0, filled.length) : cells.slice(cells.length - filled.length);
+    const moves = [];
+    filled.forEach((src, i) => {
+      const dst = targets[i];
+      if (!dst || (src.r === dst.r && src.c === dst.c)) return;
+      moves.push({ fromR: src.r, fromC: src.c, toR: dst.r, toC: dst.c, type: src.type });
+    });
+    return moves;
+  }
+
+  function computeGravityMoves() {
+    const { rows, cols } = state.config;
+    const mode = state.gravity.id;
+    const moves = [];
+    const addColumns = (c0, c1, r0, r1, toward) => {
+      for (let c = c0; c <= c1; c += 1) moves.push(...pack(columnCells(c, r0, r1), toward));
+    };
+    const addRows = (r0, r1, c0, c1, toward) => {
+      for (let r = r0; r <= r1; r += 1) moves.push(...pack(rowCells(r, c0, c1), toward));
+    };
+
+    if (mode === "down") addColumns(1, cols, 1, rows, "end");
+    else if (mode === "up") addColumns(1, cols, 1, rows, "start");
+    else if (mode === "left") addRows(1, rows, 1, cols, "start");
+    else if (mode === "right") addRows(1, rows, 1, cols, "end");
+    else if (mode === "splitX") {
+      const leftEnd = Math.floor(cols / 2);
+      const rightStart = leftEnd + 1 + (cols % 2);
+      addRows(1, rows, 1, leftEnd, "start");
+      addRows(1, rows, rightStart, cols, "end");
+    } else if (mode === "splitY") {
+      const topEnd = Math.floor(rows / 2);
+      const bottomStart = topEnd + 1 + (rows % 2);
+      addColumns(1, cols, 1, topEnd, "start");
+      addColumns(1, cols, bottomStart, rows, "end");
+    }
+    return moves;
+  }
+
+  function commitMoves(moves) {
+    if (!moves.length) return;
+    const next = state.board.map((row) => row.slice());
+    for (const move of moves) next[move.fromR][move.fromC] = 0;
+    for (const move of moves) next[move.toR][move.toC] = move.type;
+    state.board = next;
+  }
+
+  function updateGravityBar() {
+    const gravity = state.gravity;
+    gravityBar.dataset.gravity = gravity.id;
+    gravityNameEl.textContent = gravity.name;
+    gravityMarkEl.textContent = gravity.mark;
+    gravityHintEl.textContent = gravity.hint;
+  }
+
+  function pickGravity() {
+    return GRAVITY_MODES[Math.floor(Math.random() * GRAVITY_MODES.length)];
+  }
+
+  async function applyGravity() {
+    const moves = computeGravityMoves();
+    if (!moves.length) return;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduceMotion) {
+      commitMoves(moves);
+      renderBoard();
+      return;
+    }
+
+    const origins = new Map();
+    for (const move of moves) {
+      const el = tileButton(move.fromR, move.fromC);
+      if (!el) continue;
+      origins.set(`${move.toR},${move.toC}`, el.getBoundingClientRect());
+    }
+    commitMoves(moves);
+    renderBoard();
+
+    const flying = [];
+    for (const move of moves) {
+      const btn = tileButton(move.toR, move.toC);
+      const from = origins.get(`${move.toR},${move.toC}`);
+      if (!btn || !from) continue;
+      const to = btn.getBoundingClientRect();
+      const dx = from.left - to.left;
+      const dy = from.top - to.top;
+      if (dx === 0 && dy === 0) continue;
+      btn.classList.add("is-falling");
+      btn.style.transition = "none";
+      btn.style.transform = `translate(${dx}px, ${dy}px)`;
+      flying.push(btn);
+    }
+    if (!flying.length) return;
+    boardEl.offsetHeight;
+    for (const btn of flying) {
+      btn.style.transition = `transform ${GRAVITY_MS}ms cubic-bezier(0.2, 0.8, 0.2, 1)`;
+      btn.style.transform = "translate(0px, 0px)";
+    }
+    await wait(GRAVITY_MS + 20);
+    for (const btn of flying) {
+      btn.style.transition = "none";
+      btn.style.transform = "";
+      btn.classList.remove("is-falling");
+    }
+    boardEl.offsetHeight;
+    for (const btn of flying) btn.style.transition = "";
   }
 
   function ensurePlayable(maxTries = 40) {
@@ -541,6 +683,9 @@
       return;
     }
 
+    await applyGravity();
+    if (!state.running) return;
+
     if (!findMatch()) {
       ensurePlayable();
       renderBoard();
@@ -593,6 +738,7 @@
     state.timeMax = timed ? SCORE_TIME : 0;
     state.combo = 0;
     state.lastMatchAt = 0;
+    state.gravity = pickGravity();
     state.locked = false;
     state.paused = false;
     state.running = true;
@@ -601,6 +747,7 @@
     gameScreen.classList.toggle("is-practice", !timed);
     document.body.classList.add("is-playing");
     hideOverlay();
+    updateGravityBar();
     renderBoard();
     updateHud();
     startTimer();
@@ -623,7 +770,7 @@
     state.locked = true;
     stopTimer();
     sfx(won ? "win" : "lose");
-    const layoutLabel = `${state.config.rows} × ${state.config.cols}`;
+    const layoutLabel = `${state.config.rows} × ${state.config.cols} · 重力${state.gravity.name}`;
     const winBody = state.timed
       ? `${layoutLabel} · 得分 ${state.score}，剩余时间 ${formatTime(state.timeLeft)}`
       : `${layoutLabel} · 练习完成，得分 ${state.score}`;
@@ -695,7 +842,7 @@
       mode: "pause",
       kicker: "稍作休息",
       title: "已暂停",
-      body: `当前得分 ${state.score}，剩余 ${state.remain} 个图案`,
+      body: `重力${state.gravity.name}，当前得分 ${state.score}，剩余 ${state.remain} 个图案`,
       primary: "继续游戏",
       secondary: "返回首页",
     });
